@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:8000/api';
+const BASE_URL = 'https://finora-ts08.onrender.com/api';
 
 // ── Offline Support ──────────────────────────────────────────────
 
