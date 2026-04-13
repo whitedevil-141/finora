@@ -9,5 +9,5 @@ def get_supabase() -> Client:
     global _client
     if _client is None:
         settings = get_settings()
-        _client = create_client(settings.supabase_url, settings.supabase_key)
+        _client = create_client(settings.supabase_url, "sb_publishable_kKZE-w9GUbEPQOa0C318Ww__wnyUV2D")
     return _client

@@ -12,8 +12,13 @@ async def lifespan(app: FastAPI):
     """Startup/shutdown lifecycle."""
     # Startup: verify Supabase connection
     settings = get_settings()
-    sb = get_supabase()
-    print(f"[OK] Connected to Supabase: {settings.supabase_url}")
+    try:
+        sb = get_supabase()
+        print(f"[OK] Connected to Supabase: {settings.supabase_url}")
+    except Exception as e:
+        print(f"[WARNING] Supabase connection failed: {e}")
+        print(f"[WARNING] Continuing in degraded mode without Supabase")
+    
     print(f"[OK] Avatar upload provider: {settings.avatar_upload_provider}")
     print(f"[OK] CORS origins: {settings.cors_origins}")
 
