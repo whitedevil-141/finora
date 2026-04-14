@@ -2,7 +2,7 @@ const BASE_URL = 'https://finora-ts08.onrender.com/api';
 
 // ── Offline Support ──────────────────────────────────────────────
 
-import { OfflineSyncManager } from './utils/offlineSync';
+import { OfflineSyncManager, type OfflineAction } from './utils/offlineSync';
 
 /** Check if currently online */
 export function isOnlineNow(): boolean {
@@ -312,18 +312,14 @@ export const processPendingActions = async (callbacks?: {
         callbacks?.onActionStart?.(action);
 
         try {
-            let result;
             switch (action.type) {
                 case 'create':
                     if (action.entity === 'account') {
-                        result = await createAccount(action.data);
                     } else if (action.entity === 'transaction') {
-                        result = await createTransaction(action.data);
                     }
                     break;
                 case 'update':
                     if (action.entity === 'user') {
-                        result = await updateUser(action.entityId, action.data);
                     }
                     break;
             }
