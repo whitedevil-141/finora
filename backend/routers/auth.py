@@ -23,6 +23,13 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/auth", tags=["Auth"])
 
 
+# ── CORS Preflight Handler ─────────────────────────────────────────
+@router.options("/{path:path}")
+async def handle_cors_preflight(path: str):
+    """Handle CORS preflight requests for all auth endpoints."""
+    return {"status": "ok"}
+
+
 # ── Request / Response schemas ─────────────────────────────────────
 
 class SignupRequest(BaseModel):
