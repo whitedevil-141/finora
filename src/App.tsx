@@ -69,6 +69,13 @@ export default function App() {
 
   // Check if this is the OAuth callback route
   const isOAuthCallback = useMemo(() => {
+    // First check if id_token is in hash (OAuth callback from 404 redirect)
+    const hash = window.location.hash;
+    if (hash.includes('id_token=')) {
+      return true;
+    }
+    
+    // Otherwise check pathname for oauth-callback route
     const basePath = getBasePath();
     let path = window.location.pathname;
     

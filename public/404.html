@@ -4,15 +4,20 @@
     <meta charset="utf-8" />
     <title>Single Page App</title>
     <script type="text/javascript">
-      // Redirect to index.html with the original path preserved in hash
-      // This allows client-side React Router to handle the route
+      // Redirect to index.html preserving the hash (for OAuth callbacks and client-side routes)
       var l = window.location;
+      var hash = l.hash;
       var path = l.pathname;
       var search = l.search ? l.search : '';
-      var hash = l.hash;
       
-      // Redirect to /finora/ with the path stored in the hash for React Router
-      l.replace('/finora/index.html#' + path + search + hash);
+      // If there's already a hash (e.g., OAuth callback with id_token), preserve it
+      if (hash) {
+        l.replace('/finora/index.html' + hash);
+      } else {
+        // Otherwise, convert the path to a hash for client-side routing
+        // This handles routes like /finora/oauth-callback that result in 404
+        l.replace('/finora/index.html#' + path.replace(/^\/finora/, '') + search);
+      }
     </script>
   </head>
   <body></body>
