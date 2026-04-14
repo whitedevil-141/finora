@@ -245,7 +245,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       // Use popup with callback route
-      const redirectUri = encodeURIComponent(window.location.origin + '/oauth-callback');
+      const redirectUri = encodeURIComponent(window.location.origin + '/finora/oauth-callback');
       const nonce = Math.random().toString(36).substring(2);
       
       const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=id_token&scope=email%20profile&nonce=${nonce}&prompt=select_account`;
