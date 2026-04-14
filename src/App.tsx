@@ -224,11 +224,9 @@ export default function App() {
     loadData();
   }, [isInitializing, isAuthenticated, isOnline, cacheKeys.accountsKey, cacheKeys.transactionsKey, readCache, writeCache]);
 
-  useEffect(() => {
-    if (!isAuthenticated) return;
-    writeCache(cacheKeys.accountsKey, accounts);
-    writeCache(cacheKeys.transactionsKey, transactions);
-  }, [accounts, transactions, isAuthenticated, cacheKeys.accountsKey, cacheKeys.transactionsKey, writeCache]);
+  // Don't auto-write cache on every state change — that causes stale data overwrites
+  // Instead, only cache data when it comes directly from the server (in the main data load effect)
+  // This ensures the server is always the source of truth
 
   const totalBalance = useMemo(() => accounts.reduce((acc, curr) => acc + Number(curr.balance ?? 0), 0), [accounts]);
 
