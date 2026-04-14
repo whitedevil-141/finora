@@ -38,6 +38,25 @@ export default function App() {
     // Default to dark mode
     return true;
   });
+  
+  // ── Clean up URL when app mounts ───────────────────────────────
+  // GitHub Pages 404.html redirects /finora/home to /finora/index.html#/home
+  // This effect cleans it up to show the prettier URL without index.html
+  useEffect(() => {
+    const pathname = window.location.pathname;
+    const hash = window.location.hash;
+    const basePath = import.meta.env.BASE_URL || '/';
+    
+    // If URL shows index.html in the pathname, clean it up
+    if (pathname.includes('index.html') && hash) {
+      // Extract the route from the hash (e.g., #/home -> /home)
+      const routePath = hash.substring(1);
+      // Build clean URL without index.html (e.g., /finora/home)
+      const cleanPath = basePath.replace(/\/$/, '') + routePath;
+      // Update address bar without reloading
+      window.history.replaceState({}, document.title, cleanPath);
+    }
+  }, []);
   const getBasePath = () => {
     // Get the base path from the app (accounts for /finora/ on GitHub Pages)
     const base = import.meta.env.BASE_URL || '/';
