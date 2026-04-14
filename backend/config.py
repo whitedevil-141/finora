@@ -32,7 +32,7 @@ class Settings(BaseSettings):
         "http://localhost:3000",
         "http://127.0.0.1:5173",
         "http://192.168.10.139:5173",
-        "https://whitedevil-141.github.io/finora"
+        "https://whitedevil-141.github.io",
     ]
 
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
