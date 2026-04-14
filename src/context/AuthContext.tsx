@@ -239,7 +239,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const loginWithGoogle = useCallback(async () => {
     setIsLoading(true);
     try {
-      const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+      const clientId = '502378101113-5jgniiln3mcbf1r0ajd7t9s7fkbcb76j.apps.googleusercontent.com';
       if (!clientId) {
         throw new Error('Google OAuth is not configured. Missing VITE_GOOGLE_CLIENT_ID.');
       }
