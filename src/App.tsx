@@ -38,26 +38,60 @@ export default function App() {
     // Default to dark mode
     return true;
   });
+  const getBasePath = () => {
+    // Get the base path from the app (accounts for /finora/ on GitHub Pages)
+    const base = import.meta.env.BASE_URL || '/';
+    return base === '/' ? '' : base.replace(/\/$/, '');
+  };
+
   const [currentView, _setCurrentView] = useState(() => {
-    const path = window.location.pathname.replace(/^\/+/, '');
+    const basePath = getBasePath();
+    let path = window.location.pathname;
+    
+    // Remove base path if it exists
+    if (basePath && path.startsWith(basePath)) {
+      path = path.slice(basePath.length);
+    }
+    
+    // Remove leading slashes
+    path = path.replace(/^\/+/, '');
+    
     return path ? (path === 'home' ? 'dashboard' : path) : 'dashboard';
   });
 
   const setCurrentView = useCallback((view: string) => {
     _setCurrentView(view);
+    const basePath = getBasePath();
     const path = view === 'dashboard' ? 'home' : view;
-    window.history.pushState(null, '', `/${path}`);
+    const fullPath = basePath ? `${basePath}/${path}` : `/${path}`;
+    window.history.pushState(null, '', fullPath);
   }, []);
 
   // Check if this is the OAuth callback route
   const isOAuthCallback = useMemo(() => {
-    const path = window.location.pathname.replace(/^\/+/, '');
+    const basePath = getBasePath();
+    let path = window.location.pathname;
+    
+    // Remove base path if it exists
+    if (basePath && path.startsWith(basePath)) {
+      path = path.slice(basePath.length);
+    }
+    
+    path = path.replace(/^\/+/, '');
     return path === 'oauth-callback';
   }, []);
 
   useEffect(() => {
     const onPopState = () => {
-      const path = window.location.pathname.replace(/^\/+/, '');
+      const basePath = getBasePath();
+      let path = window.location.pathname;
+      
+      // Remove base path if it exists
+      if (basePath && path.startsWith(basePath)) {
+        path = path.slice(basePath.length);
+      }
+      
+      path = path.replace(/^\/+/, '');
       _setCurrentView(path ? (path === 'home' ? 'dashboard' : path) : 'dashboard');
     };
     window.addEventListener('popstate', onPopState);

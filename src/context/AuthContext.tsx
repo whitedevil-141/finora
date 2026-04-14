@@ -78,8 +78,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           const params = new URLSearchParams(hash.substring(1));
           const idToken = params.get('id_token');
           if (idToken) {
-            // Clean up the URL hash
-            window.history.replaceState({}, document.title, '/home');
+            // Clean up the URL hash and account for base path (GitHub Pages /finora/)
+            const basePath = import.meta.env.BASE_URL || '/';
+            const homePath = basePath === '/' ? '/home' : basePath.replace(/\/$/, '') + '/home';
+            window.history.replaceState({}, document.title, homePath);
 
             try {
               const result = await authGoogle(idToken);
@@ -244,8 +246,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         throw new Error('Google OAuth is not configured. Missing VITE_GOOGLE_CLIENT_ID.');
       }
 
-      // Use popup with callback route
-      const redirectUri = encodeURIComponent(window.location.origin + '/finora/oauth-callback');
+      // Build the redirect URI dynamically based on current location
+      // On GitHub Pages: https://whitedevil-141.github.io/finora/oauth-callback
+      // On localhost: http://localhost:5173/oauth-callback
+      const basePath = import.meta.env.BASE_URL || '/';
+      const callbackPath = basePath === '/' ? '/oauth-callback' : basePath + 'oauth-callback';
+      const redirectUri = encodeURIComponent(window.location.origin + callbackPath);
       const nonce = Math.random().toString(36).substring(2);
       
       const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=id_token&scope=email%20profile&nonce=${nonce}&prompt=select_account`;

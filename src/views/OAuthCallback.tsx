@@ -19,6 +19,10 @@ export default function OAuthCallback() {
 
     // Check if we're in a popup
     const isPopup = !!window.opener && window.opener !== window;
+    
+    // Get the base path for GitHub Pages support
+    const basePath = import.meta.env.BASE_URL || '/';
+    const getPath = (path: string) => basePath === '/' ? path : basePath.replace(/\/$/, '') + path;
 
     if (error) {
       if (isPopup) {
@@ -31,7 +35,7 @@ export default function OAuthCallback() {
         );
         setTimeout(() => window.close(), 500);
       } else {
-        window.location.href = '/home?error=' + encodeURIComponent(error);
+        window.location.href = getPath('/home') + '?error=' + encodeURIComponent(error);
       }
     } else if (idToken) {
       if (isPopup) {
@@ -46,11 +50,11 @@ export default function OAuthCallback() {
       } else {
         loginWithGoogleToken(idToken)
           .then(() => {
-            window.history.replaceState({}, document.title, '/home');
-            window.location.href = '/home';
+            window.history.replaceState({}, document.title, getPath('/home'));
+            window.location.href = getPath('/home');
           })
           .catch(() => {
-            window.location.href = '/home?error=auth_failed';
+            window.location.href = getPath('/home') + '?error=auth_failed';
           });
       }
     } else {
